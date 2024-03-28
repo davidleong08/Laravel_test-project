@@ -1,0 +1,70 @@
+/* resources/css/styles.css */
+
+/* 假设 styles.css 在 public/css 目录下 */
+.card-img-top {
+    width: 100%; /* 图像宽度占满容器宽度 */
+    height: 200px; /* 固定图像高度 */
+    object-fit: cover; /* 裁剪图像以填充容器 */
+    display: block; /* 图像作为块级元素 */
+    margin-bottom: 15px; /* 图像下方间距 */
+}
+
+/* 共享的基本样式 */
+body, h1, p {
+    margin: 0;
+    padding: 0;
+}
+
+/* 导航栏样式 */
+.navbar {
+    background-color: #007bff; /* 蓝色背景 */
+    color: #ffffff;
+}
+
+.navbar a {
+    color: #ffffff;
+    transition: color 0.3s ease;
+}
+
+.navbar a:hover {
+    color: #d0d0d0;
+}
+
+/* 按钮样式 */
+.btn {
+    margin-right: 5px;
+}
+
+/* 页面内容容器 */
+.container {
+    padding: 20px;
+}
+
+/* 卡片样式 */
+.card {
+    margin-bottom: 20px;
+}
+
+/* 添加到您的CSS文件中 */
+.image-container {
+    width: 200px; /* 这里假设您想要的固定宽度是200px */
+    height: 200px; /* 这里假设您想要的固定高度是200px */
+    overflow: hidden; /* 隐藏溢出的部分 */
+    display: flex; /* 使用flex布局，可以帮助居中图像 */
+    justify-content: center; /* 在容器中水平居中图像 */
+    align-items: center; /* 在容器中垂直居中图像 */
+  }
+  
+  .soup-image {
+    width: auto; /* 让图像的宽度根据高度自动调整 */
+    height: 100%; /* 让图像的高度填满容器 */
+    max-width: 100%; /* 确保图像的宽度不会超过容器宽度 */
+    object-fit: cover; /* 如果图像的宽度和高度超过容器，多出的部分将被裁剪 */
+  }
+
+/* 文本居中显示 */
+.text-center {
+    text-align: center;
+}
+
+/* Add more styles as needed */
