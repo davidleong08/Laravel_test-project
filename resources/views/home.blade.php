@@ -28,7 +28,7 @@
         {{-- 其他导航链接... --}}
         <div class="d-flex">
         <div id="weather-info" class="mr-auto">
-        Temperature: <span id="temp"></span>°C | Humidity:<span id="humidity"></span>%
+        Temperature: <span id="temp"></span> | Humidity:<span id="humidity"></span>
             </div>
             @if(Auth::check())
             <form action="{{ url('/logout') }}" method="POST">
@@ -46,6 +46,7 @@
         <h1>Seasonal Soup Recommendations</h1>
         <!-- 显示当前日期 -->
         <p id="current-date" class="font-weight-bold"></p>
+        <p id="recommendation" style="color: blue;"></p>
         <!-- 季节筛选按钮 -->
         <div class="btn-group" role="group" aria-label="Seasonal Soup Selection">
             <button type="button" class="btn btn-primary" onclick="filterSoups('spring')">Spring</button>
@@ -97,24 +98,60 @@
         });
 
         function fetchWeatherData() {
-            var url = 'http://soup.test_project/weather/macao';
-        $.ajax({
-            url: url,
-            type: 'GET',
-            dataType: 'json',
-            success: function(data) {
-                  // 由于dataType是'json'，data对象将会是一个已经解析的JSON对象
-            var temperature = data.temp; // 获取温度
-            var humidity = data.humidity; // 获取湿度
+    var url = 'http://soup.test_project/weather/macao';
+    $.ajax({
+        url: url,
+        type: 'GET',
+        dataType: 'json',
+        success: function (data) {
+            var temperature = data.temp; // Get temperature
+            var humidity = data.humidity; // Get humidity
 
-                 // 更新页面上的元素
-                 $('#temp').text(temperature);
-                $('#humidity').text(humidity);
-            },
-            error: function(error) {
-                console.error("无法获取天气数据:", error);
+            // Format temperature string
+            var temperatureString = temperature + '°C';
+            if (temperature > 30) {
+                temperatureString += ' (High temperature)';
+            } else if (temperature < 15) {
+                temperatureString += ' (Low temperature)';
             }
-        });
+
+            // Update temperature element
+            var tempElement = $('#temp');
+            tempElement.text(temperatureString);
+            if (temperature > 30) {
+                tempElement.addClass('text-danger');
+            } else if (temperature < 15) {
+                tempElement.addClass('text-primary');
+            }
+
+            // Format humidity string
+            var humidityString = humidity + '%';
+            if (humidity > 70) {
+                humidityString += ' (High humidity)';
+                showRecommendation('Warming Remind: Better choose removes dampness soups.');
+            } else if (humidity < 30) {
+                humidityString += ' (Low humidity)';
+                showRecommendation('Warming Remind: Better choose moisturizes dryness soups.');
+            }
+
+            // Update humidity element
+            var humidityElement = $('#humidity');
+            humidityElement.text(humidityString);
+            if (humidity > 70) {
+                humidityElement.addClass('text-danger');
+            } else if (humidity < 30) {
+                humidityElement.addClass('text-primary');
+            }
+        },
+        error: function (error) {
+            console.error("Unable to fetch weather data:", error);
+        }
+    });
+}
+
+    function showRecommendation(message) {
+        var recommendationElement = $('#recommendation');
+        recommendationElement.text(message);
     }
 
         // Filter soups based on the selected season

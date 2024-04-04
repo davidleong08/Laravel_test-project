@@ -22,13 +22,16 @@ class Soup extends Model
         return $this->belongsToMany(Condition::class);
     }
 
-    public static function filter($criteria)
+    public static function filter($criterias)
     {
-        $myConditions=Condition::
-            orWhere('id', $criteria[0])
-            ->orWhere('id', $criteria[1])
-            ->orWhere('id', $criteria[2])
-            ->get();
+            $soups=ConditionSoup::select('soup_id')->whereIn('condition_id',$criterias)->groupBy('soup_id')->get();
+
+        return $soups;
+        // $myConditions=Condition::
+        //     orWhere('id', $criteria[0])
+        //     ->orWhere('id', $criteria[1])
+        //     ->orWhere('id', $criteria[2])
+        //     ->get();
         // dd($myConditions);
         // dd($myConditions[2]->soups);
         // dd($myConditions->soups);

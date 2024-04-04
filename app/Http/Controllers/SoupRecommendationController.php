@@ -1,51 +1,46 @@
 <?php
-// app/Http/Controllers/SoupRecommendationController.php
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Soup;
-use App\Models\BodyCondition;
+use App\Models\Condition;
+use Illuminate\Support\Facades\Auth;
 
 class SoupRecommendationController extends Controller
 {
+    /**
+     * 根據用戶的條件推薦湯品。
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\Response
+     */
     public function recommend(Request $request)
     {
-        // 從請求中獲取用戶ID並查找相應的身體狀況
-        $userId = $request->input('user_id');
-        $bodyCondition = BodyCondition::where('user_id', $userId)->first();
+        // 從前端獲取條件的 level_value 值
+        $sleepQuality = $request->input('sleep_quality');
+        $healthGoals = $request->input('health_goals');
+        $bodyStatus = $request->input('body_status');
 
-        // 獲取當前的季節，這個範例中我們假設它是從請求中傳遞過來的
-        $currentSeason = $request->input('season');
+        // 根據這些條件找到對應的 Condition IDs
+        $conditionIds = Condition::query()
+            ->orWhere('level_value', $sleepQuality)
+            ->orWhere('level_value', $healthGoals)
+            ->orWhere('level_value', $bodyStatus)
+            ->pluck('id')
+            ->toArray();
 
-        // 構建查詢以獲得推薦的湯水
-        $query = Soup::query();
+        // 根據條件IDs找到對應的湯品
+        $soups = Soup::whereHas('conditions', function ($query) use ($conditionIds) {
+            $query->whereIn('condition_id', $conditionIds);
+        })->get();
 
-        if ($bodyCondition) {
-            // 如果用戶需要改善消化，則過濾出有助於消化的湯水
-            if ($bodyCondition->health_goals === 'improve_digestion') {
-                $query->where('benefits', 'LIKE', '%strengthen the spleen and qi%');
-            }
-
-            // 如果用戶的BMI較高，則推薦低脂的湯水
-            if ($bodyCondition->bmi > 25) {
-                $query->where('benefits', 'LIKE', '%low-fat%');
-            }
+        // 如果沒有找到合適的湯，返回一個空陣列
+        if ($soups->isEmpty()) {
+            return response()->json(['message' => 'No soups found for the provided conditions', 'soups' => []]);
         }
 
-        // 根據季節過濾湯水
-        $query->where('season', $currentSeason);
-
-        // 假設'allergies'欄位是一個以逗號分隔的字符串，包含用戶過敏的食材
-        if ($bodyCondition && $bodyCondition->allergies) {
-            $allergies = explode(',', $bodyCondition->allergies);
-            foreach ($allergies as $allergy) {
-                $query->where('description', 'NOT LIKE', '%' . $allergy . '%');
-            }
-        }
-
-        // 獲取推薦的湯水
-        $recommendedSoups = $query->get();
-
-        return response()->json($recommendedSoups);
+        // 將推薦的湯品返回給前端
+        return response()->json(['message' => 'Soup recommendations based on conditions', 'soups' => $soups]);
     }
 }

@@ -49,15 +49,25 @@ Route::get('/body-conditions/filter', [BodyConditionController::class, 'filter']
 Route::get('/bodycondition/index', [BodyConditionController::class, 'index'])->name('bodycondition.index');
 //Route::post('/body-conditions', [BodyConditionController::class, 'store'])->name('body.conditions.store');
 Route::post('/body-conditions', [BodyConditionController::class, 'store'])->name('body-conditions.store');
-Route::post('/body-conditions/store-or-update', [BodyConditionController::class, 'storeOrUpdate'])->name('body-conditions.store-or-update');
+Route::post('/body-conditions/update', [BodyConditionController::class, 'update'])->name('body-conditions.update');
 Route::get('/body-conditions', [BodyConditionController::class, 'index'])->name('body-conditions.index');
 //Route::get('body-conditions/{id}/recommend-soups', 'BodyConditionController@recommendSoups')->name('body-conditions.recommend-soups');
 
 
-Route::resource('admin/soups',App\Http\Controllers\Admin\SoupController::class)->names('admin.soups');
-Route::resource('admin/conditions',App\Http\Controllers\Admin\ConditionController::class)->names('admin.update');
-// 在 routes/web.php 中
-Route::get('/soups', function () {
-    $soups = \App\Models\Soup::all(); // 確保你有使用正確的命名空間
-    return view('soups.index', compact('soups'));
-})->middleware('auth'); // 保護這個路由，要求用戶必須登入
+
+//Route::resource('admin/conditions',App\Http\Controllers\Admin\ConditionController::class)->names('admin.update');
+//Route::prefix('admin')->group(function () {
+    // 管理员登录页面
+    //Route::get('/login', 'AdminController@showLoginForm')->name('Admin.login');
+
+    // 处理管理员登录请求
+    //Route::post('/login', 'AdminController@login')->name('admin.login.submit');
+
+    // 管理员注销
+    //Route::post('/logout', 'AdminController@logout')->name('Admin.logout');
+//});
+Route::prefix('admin')->group(function () {
+    // ... 其他管理员路由 ...
+    Route::get('/soups/{soup}', [App\Http\Controllers\Admin\SoupController::class, 'show'])->name('admin.soups.show');
+    Route::get('/soups', [App\Http\Controllers\Admin\SoupController::class, 'index'])->name('admin.index');
+});

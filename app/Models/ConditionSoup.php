@@ -8,4 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class ConditionSoup extends Model
 {
     use HasFactory;
+    protected $table='condition_soup';
+
+
 }

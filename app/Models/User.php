@@ -44,7 +44,8 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
     public function bodyConditions()
-{
-    return $this->hasMany(BodyCondition::class);
-}
+    {
+        return $this->hasMany(BodyCondition::class);
+    }
+
 }

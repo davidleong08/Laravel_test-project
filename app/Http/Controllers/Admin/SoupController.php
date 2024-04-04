@@ -49,7 +49,7 @@ class SoupController extends Controller
     public function edit($id)
     {
 
-       //
+
     }
 
     /**
