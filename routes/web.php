@@ -73,3 +73,4 @@ Route::prefix('admin')->group(function () {
 });
 Route::get('/body-conditions/create', [BodyConditionController::class, 'create'])->name('body-conditions.create');
 Route::post('/body-conditions', [BodyConditionController::class, 'store'])->name('body-conditions.store');
+Route::post('/body-conditions/update/{id}', [BodyConditionController::class, 'update']);
