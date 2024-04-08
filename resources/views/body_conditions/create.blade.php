@@ -1,10 +1,9 @@
-{{-- resources/views/body_conditions/index.blade.php --}}
+{{-- resources/views/body_conditions/create.blade.php --}}
 @extends('layouts.app')
 
 @section('content')
 <div class="container">
-    <h1>Personalize Your Soup Recommendations</h1>
-
+    <h1>Enter Your Body Conditions</h1>
     {{-- 表单新增或编辑 body conditions --}}
     <form method="post" action="{{ route('body-conditions.update') }}">
         @csrf
@@ -48,23 +47,6 @@
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>
         </form>
-    {{-- After the form, display the soup recommendations --}}
-    @if (isset($matchingPercentage))
-        @if ($matchingPercentage == 100)
-            <p>100%Suitable for your physical condition:</p>
-        @elseif ($matchingPercentage >= 60)
-            <p>{{ $matchingPercentage }}%Suitable for your physical condition:</p>
-        @endif
-    @endif
 
-    @if($soups->isNotEmpty())
-        @foreach ($soups as $soup)
-            {{-- Include the soup_list view --}}
-            @include('soup_list', ['soup' => $soup])
-        @endforeach
-    @else
-        <p>No soups found for your conditions.</p>
-    @endif
 </div>
-
 @endsection

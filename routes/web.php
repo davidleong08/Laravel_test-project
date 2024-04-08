@@ -71,3 +71,5 @@ Route::prefix('admin')->group(function () {
     Route::get('/soups/{soup}', [App\Http\Controllers\Admin\SoupController::class, 'show'])->name('admin.soups.show');
     Route::get('/soups', [App\Http\Controllers\Admin\SoupController::class, 'index'])->name('admin.index');
 });
+Route::get('/body-conditions/create', [BodyConditionController::class, 'create'])->name('body-conditions.create');
+Route::post('/body-conditions', [BodyConditionController::class, 'store'])->name('body-conditions.store');

@@ -9,6 +9,7 @@ class WeatherController extends Controller
 {
     public function getWeather(Request $request, $city)
     {
+        $city = urlencode($city);
         $apiKey = env('API_NINJAS_KEY'); // 將您的 API 密鑰存儲在 .env 文件中
 
         $response = Http::withHeaders([

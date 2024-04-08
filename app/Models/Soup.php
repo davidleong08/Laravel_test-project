@@ -19,7 +19,7 @@ class Soup extends Model
 
     public function conditions()
     {
-        return $this->belongsToMany(Condition::class);
+        return $this->belongsToMany(Condition::class, 'condition_soup');
     }
 
     public static function filter($criterias)
@@ -27,24 +27,14 @@ class Soup extends Model
             $soups=ConditionSoup::select('soup_id')->whereIn('condition_id',$criterias)->groupBy('soup_id')->get();
 
         return $soups;
-        // $myConditions=Condition::
-        //     orWhere('id', $criteria[0])
-        //     ->orWhere('id', $criteria[1])
-        //     ->orWhere('id', $criteria[2])
-        //     ->get();
-        // dd($myConditions);
-        // dd($myConditions[2]->soups);
-        // dd($myConditions->soups);
-        // $query = self::query();
 
-        // foreach ($criteria as $key => $value) {
-        //     if (!empty($value)) {
-        //         $query->where($key, $value);
-        //     }
-        // }
-
-        // return $query->get();
     }
 
+    public function scopeFilter($query, $conditions)
+    {
+        return $query->whereHas('conditions', function ($q) use ($conditions) {
+            $q->whereIn('condition_id', $conditions);
+        });
+    }
 
 }

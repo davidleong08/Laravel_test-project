@@ -28,9 +28,10 @@
         {{-- 其他导航链接... --}}
         <div class="d-flex">
         <div id="weather-info" class="mr-auto">
-        Temperature: <span id="temp"></span> | Humidity:<span id="humidity"></span>
+        Temperature: <span id="temp"></span> | Humidity:<span id="humidity"></span> | Location: <span id="location">Macau</span>
             </div>
             @if(Auth::check())
+            <a href="{{ route('bodycondition.index') }}" class="btn btn-outline-info mr-2">Edit Profile</a>
             <form action="{{ url('/logout') }}" method="POST">
         @csrf <!-- 保护 CSRF 攻击 -->
         <button type="submit" class="btn btn-outline-success">Logout</button>

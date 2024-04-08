@@ -11,6 +11,6 @@ class Condition extends Model
 
     public function soups()
     {
-        return $this->belongsToMany(Soup::class);
+        return $this->belongsToMany(Soup::class, 'condition_soup');
     }
 }

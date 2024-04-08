@@ -8,7 +8,7 @@
 }
 .soup-detail-image {
   width: 50%; /* 图像宽度为容器宽度 */
-  height: 1000px; /* 设置固定高度与首页卡片视图一致 */
+  height: 300px; /* 设置固定高度与首页卡片视图一致 */
   object-fit: cover; /* 裁剪并覆盖容器 */
   object-position: center; /* 图像居中 */
 }

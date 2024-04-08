@@ -13,6 +13,8 @@ class BodyCondition extends Model
         'email', 'height', 'weight', 'sleep_quality', 'health_goals', 'allergies', 'bmi','body_status',
     ];
 
+    protected $guarded = [];
+
     protected $dates = [
         'created_at',
         'updated_at',
@@ -42,37 +44,31 @@ class BodyCondition extends Model
     }
     public function calculateBMI()
 {
+    // 确保身高(height)和体重(weight)字段已经有值
     if ($this->height && $this->weight) {
+        // 将身高从厘米转换为米
         $heightInMeters = $this->height / 100;
-        $this->bmi = round($this->weight / ($heightInMeters ** 2), 2);
-
-        // Set body_status based on the calculated BMI
-        if ($this->bmi < 18.5) {
-            $this->body_status = 'underweight';
-        } elseif ($this->bmi >= 18.5 && $this->bmi <= 24.9) {
-            $this->body_status = 'healthy';
-        } elseif ($this->bmi >= 25 && $this->bmi <= 29.9) {
-            $this->body_status = 'overweight';
-        } else {
-            $this->body_status = 'obese';
-        }
-
+        // 计算BMI
+        $this->bmi = $this->weight / ($heightInMeters * $heightInMeters);
+        // 保存BMI值
         $this->save();
     }
 }
-// public function getBodyStatusAttribute()
-// {
 
-//     if ($this->bmi < 18.5) {
-//         return 'underweight';
-//     } elseif ($this->bmi >= 18.5 && $this->bmi <= 24.9) {
-//         return 'healthy';
-//     } elseif ($this->bmi >= 25 && $this->bmi <= 29.9) {
-//         return 'overweight';
-//     } else {
-//         return 'obese';
-//     }
-// }
+public function updateBodyStatus()
+{
+    // 根据bmi或其他逻辑更新body_status字段
+    if ($this->bmi < 18.5) {
+        $this->body_status = 'HUW';
+    } elseif ($this->bmi >= 18.5 && $this->bmi < 25) {
+        $this->body_status = 'HHH';
+    } elseif ($this->bmi >= 25) {
+        $this->body_status = 'HOW';
+    }
+
+    // 可能还有更多的条件和逻辑
+}
+
 public function recommendedSoups()
 {
     // 假设我们根据体质和健康目标来推荐汤水
@@ -91,5 +87,11 @@ public function recommendedSoups()
 
     return $query->get();
 }
+
+
+public function conditions()
+    {
+        return $this->hasManyThrough(Condition::class, ConditionSoup::class, 'condition_id', 'id');
+    }
 
 }
